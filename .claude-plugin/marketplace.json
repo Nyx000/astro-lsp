@@ -8,7 +8,7 @@
     {
       "name": "astro-lsp",
       "source": "./",
-      "description": "Astro language server for enhanced code intelligence",
+      "description": "Astro language server support: hover, go-to-definition, references and diagnostics in .astro files",
       "version": "1.0.0"
     }
   ]

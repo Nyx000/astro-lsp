@@ -1,7 +1,7 @@
 {
   "name": "astro-lsp",
   "version": "1.0.0",
-  "description": "Astro language server for enhanced code intelligence",
+  "description": "Astro language server support: hover, go-to-definition, references and diagnostics in .astro files",
   "license": "Apache-2.0",
   "author": { "name": "Nyx000" },
   "repository": "https://github.com/Nyx000/astro-lsp",

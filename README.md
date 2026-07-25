@@ -2,7 +2,7 @@
 
 Language server support for `.astro` files in Claude Code.
 
-Without it, Claude reads Astro components as plain text. With it, it can look up real types, jump to definitions, find every usage of a symbol, and see type errors as they happen.
+Otherwise Claude reads Astro components as plain text, which means guessing at the shape of your props and collections. This gives it somewhere to look instead: real types, definitions, every usage of a symbol, type errors as they appear.
 
 Embedded TypeScript, CSS and HTML inside `.astro` files are covered too. It doesn't claim `.ts` or `.js`; `typescript-lsp` handles those.
 
