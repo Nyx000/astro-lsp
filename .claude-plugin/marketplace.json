@@ -1,0 +1,15 @@
+{
+  "name": "astro-lsp",
+  "owner": { "name": "Nyx000" },
+  "metadata": {
+    "description": "Astro language server plugin marketplace"
+  },
+  "plugins": [
+    {
+      "name": "astro-lsp",
+      "source": "./",
+      "description": "Astro language server for enhanced code intelligence",
+      "version": "1.0.0"
+    }
+  ]
+}
