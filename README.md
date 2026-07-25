@@ -53,7 +53,7 @@ TypeScript has to sit directly under your project root, so hoisted monorepos and
 
 The manifest sets `workspaceFolder` and `initializationOptions`, which most LSP plugins don't bother with. The Astro server refuses to start without a `typescript.tsdk` option, and that field isn't interpolated, so the path has to be relative. A relative path only resolves if the server's working directory is pinned to the project root, which is what `workspaceFolder` does. The two go together.
 
-Tested on Windows. Not tried yet on macOS or Linux.
+Nothing in the manifest is platform-specific. There are no absolute paths, and `astro-ls` is resolved from PATH, which npm sets up on every platform. It has only been exercised on Windows so far, though.
 
 Completion isn't available. Claude Code's LSP interface has no completion operation, so nothing can reach it. Hover, go-to-definition, references and diagnostics all work.
 

@@ -9,6 +9,7 @@
 // neither exists. --server overrides both and is used as-is.
 // Exit 0 = all assertions passed.
 const { spawn, execSync } = require('child_process');
+const { pathToFileURL } = require('url');
 const fs = require('fs');
 const path = require('path');
 
@@ -17,6 +18,10 @@ if (!ROOT) {
   console.error('usage: node scripts/verify-lsp.js <projectRoot> [--server <nodeServer.js>]');
   process.exit(1);
 }
+// Build file URIs with pathToFileURL, not string concatenation. A POSIX root
+// already begins with '/', so 'file:///' + ROOT yields four slashes; and a path
+// containing a space needs percent-encoding on every platform.
+const ROOT_URI = pathToFileURL(ROOT).href;
 
 function resolveGlobalServer() {
   try {
@@ -139,8 +144,8 @@ function assert(name, ok, detail) {
 (async () => {
   const init = await withTimeout(send('initialize', {
     processId: process.pid,
-    rootUri: 'file:///' + ROOT,
-    workspaceFolders: [{ uri: 'file:///' + ROOT, name: path.basename(ROOT) }],
+    rootUri: ROOT_URI,
+    workspaceFolders: [{ uri: ROOT_URI, name: path.basename(ROOT) }],
     initializationOptions: { typescript: { tsdk: 'node_modules/typescript/lib' } },
     capabilities: {
       workspace: { configuration: true },
@@ -158,7 +163,7 @@ function assert(name, ok, detail) {
 
   notify('initialized', {});
 
-  const uri = 'file:///' + TARGET.split(path.sep).join('/');
+  const uri = pathToFileURL(TARGET).href;
   notify('textDocument/didOpen', { textDocument: { uri, languageId: 'astro', version: 1, text } });
   await new Promise((r) => setTimeout(r, 8000)); // let Volar build the project
 
