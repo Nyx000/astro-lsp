@@ -44,7 +44,7 @@ It spawns the server, checks initialize, hover and diagnostics against a real `.
 
 ## Layouts that don't work
 
-TypeScript has to sit directly under your project root, so hoisted monorepos and Yarn PnP are out. There's no settings.json override for this, because LSP configuration only lives in a plugin manifest. Two things do work:
+TypeScript has to sit directly under your project root, so hoisted monorepos and Yarn PnP are out. There's no settings.json override for this, because LSP configuration only lives in a plugin manifest. A `userConfig` option can't reach it either: `${user_config.*}` does substitute into an LSP server's `args`, but not into nested `initializationOptions` values, and `initializationOptions` is the only place `@astrojs/language-server` reads `tsdk` from. Verified against Claude Code 2.1.221. Two things do work:
 
 - Fork this repo, change the `tsdk` path in `.claude-plugin/plugin.json`, install from your fork.
 - In a monorepo, start Claude Code at whichever directory actually has `node_modules/typescript` under it.
