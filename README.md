@@ -14,9 +14,9 @@ claude plugin install astro-lsp@astro-lsp
 npm install -g @astrojs/language-server prettier prettier-plugin-astro
 ```
 
-Needs `@astrojs/language-server` 2.16 or newer (2.16.6 and 2.16.13 both tested). The prettier packages are peer dependencies of the server; formatting degrades without them.
+Needs Claude Code 2.1.288 or newer (plugin 1.1.0 passes the TypeScript path through a setting, which older versions send to the server unsubstituted; stay on 1.0.0 there) and `@astrojs/language-server` 2.16 or newer (2.16.6 and 2.16.13 both tested). The prettier packages are peer dependencies of the server; formatting degrades without them.
 
-Your project also needs TypeScript of its own, at `node_modules/typescript/lib`. A fresh `create-astro` project does **not** include it — astro keeps TypeScript as its own devDependency, which never reaches your tree, and the `--typescript` flag only writes a `tsconfig.json`. If `node_modules/typescript` isn't there:
+Your project also needs TypeScript of its own, by default at `node_modules/typescript/lib`. A fresh `create-astro` project does **not** include it — astro keeps TypeScript as its own devDependency, which never reaches your tree, and the `--typescript` flag only writes a `tsconfig.json`. If `node_modules/typescript` isn't there:
 
 ```bash
 npm install -D typescript
@@ -44,14 +44,13 @@ It spawns the server, checks initialize, hover and diagnostics against a real `.
 
 ## Layouts that don't work
 
-TypeScript has to sit directly under your project root, so hoisted monorepos and Yarn PnP are out. There's no settings.json override for this, because LSP configuration only lives in a plugin manifest. A `userConfig` option can't reach it either: `${user_config.*}` does substitute into an LSP server's `args`, but not into nested `initializationOptions` values, and `initializationOptions` is the only place `@astrojs/language-server` reads `tsdk` from. Verified against Claude Code 2.1.221. Two things do work:
+By default TypeScript has to sit directly under your project root, which hoisted monorepos and Yarn PnP don't give you. For those, set the plugin's **TypeScript SDK path** option (`/plugin`, then Configure options) to wherever `typescript/lib` actually is. A relative path resolves against the project root.
 
-- Fork this repo, change the `tsdk` path in `.claude-plugin/plugin.json`, install from your fork.
-- In a monorepo, start Claude Code at whichever directory actually has `node_modules/typescript` under it.
+In a monorepo you can also start Claude Code at whichever directory actually has `node_modules/typescript` under it.
 
 ## Notes
 
-The manifest sets `workspaceFolder` and `initializationOptions`, which most LSP plugins don't bother with. The Astro server refuses to start without a `typescript.tsdk` option, and that field isn't interpolated, so the path has to be relative. A relative path only resolves if the server's working directory is pinned to the project root, which is what `workspaceFolder` does. The two go together.
+The manifest sets `workspaceFolder` and `initializationOptions`, which most LSP plugins don't bother with. The Astro server refuses to start without a `typescript.tsdk` option, and the default is a relative path. Claude Code substitutes `${user_config.*}` into `initializationOptions` from 2.1.288 on (it did not on 2.1.221, where 1.0.0 was verified; rechecked on 2.1.293). A relative path only resolves if the server's working directory is pinned to the project root, which is what `workspaceFolder` does. The two go together.
 
 Nothing in the manifest is platform-specific. There are no absolute paths, and `astro-ls` is resolved from PATH, which npm sets up on every platform. It has only been exercised on Windows so far, though.
 

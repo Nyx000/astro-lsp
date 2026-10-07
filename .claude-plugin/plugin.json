@@ -1,11 +1,19 @@
 {
   "name": "astro-lsp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Astro language server support: hover, go-to-definition, references and diagnostics in .astro files",
   "license": "Apache-2.0",
   "author": { "name": "Nyx000" },
   "repository": "https://github.com/Nyx000/astro-lsp",
   "keywords": ["astro", "lsp", "language-server", "code-intelligence"],
+  "userConfig": {
+    "tsdk": {
+      "type": "string",
+      "title": "TypeScript SDK path",
+      "description": "Path to TypeScript's lib folder, relative to the project root or absolute",
+      "default": "node_modules/typescript/lib"
+    }
+  },
   "lspServers": {
     "astro": {
       "command": "astro-ls",
@@ -13,7 +21,7 @@
       "extensionToLanguage": { ".astro": "astro" },
       "workspaceFolder": "${CLAUDE_PROJECT_DIR}",
       "initializationOptions": {
-        "typescript": { "tsdk": "node_modules/typescript/lib" }
+        "typescript": { "tsdk": "${user_config.tsdk}" }
       }
     }
   }
